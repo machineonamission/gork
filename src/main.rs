@@ -1,6 +1,7 @@
 use gemini_rs;
 use gemini_rs::types;
-use serenity::all::{MessageReferenceKind, User};
+use serde_json::{from_value, json, Value};
+use serenity::all::{MessageCreateEvent, MessageId, MessageReferenceKind, User};
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
@@ -51,8 +52,10 @@ async fn get_reply(msg: &Message, ctx: &Context) -> Option<Message> {
 
     // 3) Try the cache
     if let Some(cached) = ctx.cache.message(&msg.channel_id, id) {
+        println!("Cache hit!");
         return Some(cached.clone());
     }
+    println!("Cache miss!");
 
     // 4) Fallback to HTTP (this is the only await)
     let fetched = ctx.http.get_message(msg.channel_id, id).await.ok()?;
@@ -123,9 +126,14 @@ async fn main() {
         | GatewayIntents::DIRECT_MESSAGES
         | GatewayIntents::MESSAGE_CONTENT;
 
+    use serenity::cache::Settings as CacheSettings;
+
+    let mut settings = CacheSettings::default();
+    settings.max_messages = 1000;
     // Create a new instance of the Client, logging in as a bot.
     let mut client = Client::builder(&token, intents)
         .event_handler(Handler)
+        .cache_settings(settings)
         .await
         .expect("Err creating client");
 

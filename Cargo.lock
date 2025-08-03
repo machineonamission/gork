@@ -570,6 +570,7 @@ name = "gork"
 version = "0.1.0"
 dependencies = [
  "gemini-rs",
+ "serde_json",
  "serenity",
  "tokio",
 ]
@@ -1806,6 +1807,7 @@ dependencies = [
  "fxhash",
  "levenshtein",
  "mime_guess",
+ "mini-moka",
  "parking_lot",
  "percent-encoding",
  "reqwest 0.11.27",
