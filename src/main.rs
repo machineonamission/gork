@@ -81,7 +81,7 @@ impl EventHandler for Handler {
 
             let client = gemini_rs::Client::new(include_str!("../geminikey.txt"));
             let mut chat = client
-                .chat("gemini-2.0-flash")
+                .chat("gemini-2.0-flash-lite")
                 .system_instruction(include_str!("prompt.txt"));
 
             for msg in trace_replies(&msg, &ctx).await.iter().rev() {
